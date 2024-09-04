@@ -67,8 +67,4 @@ it("Tutor Dashboard Menu looks good", async () => {
     await struct.userMenu.signOut.waitForVisible();
     await struct.userMenu.signOut.click();
 
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> a495ae5 (update all)
