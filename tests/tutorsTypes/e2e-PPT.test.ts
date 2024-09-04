@@ -145,7 +145,7 @@ describe("E2E PPT: ", () => {
     await t.page.waitForTimeout(10000);
 
 
-    // student ends the lesson
+    // void the lesson
     await t.struct.lessonSpace.header.void.waitForVisible();
     await t.struct.lessonSpace.header.void.click();
 

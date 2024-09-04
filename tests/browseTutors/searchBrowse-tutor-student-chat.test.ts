@@ -3,6 +3,8 @@ import faker, { random } from "faker";
 it("student requests a lesson directly but tutor rejects it", async () => {
   //create tutor
   const t = await createQaTutor();
+  await t.page.waitForTimeout(7000);
+
   const s = await createQaUser("studentWithUmbrella");
 
   // get tutor name and id
@@ -11,10 +13,14 @@ it("student requests a lesson directly but tutor rejects it", async () => {
   const tutor_num = tutorId.toString();
 
   //create student
+  await t.page.reload();
   await t.page.waitForTimeout(3000);
+  
   await s.struct.header.browseTutors.waitForVisible();
   await s.struct.header.browseTutors.click();
+  await s.page.reload();
   await s.page.waitForTimeout(3000);
+
 
   // find available tutor
   await s.struct.tutors.tutor(tutor_num).name.waitForVisible();
