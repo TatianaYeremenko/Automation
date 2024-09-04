@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@jest/reporters": "^27.4.4",
-    "@tutorme/sitestruct": "^0.1.94",
+    "@tutorme/sitestruct": "^0.1.96",
     "@types/colors": "^1.2.1",
     "@types/faker": "^5.5.9",
     "@types/jest": "^27.0.3",
