@@ -6,7 +6,7 @@ it("student is able to search a tutor and send a message", async () => {
   const s = await createQaUser("studentWithUmbrella");
 
   // get tutor name and id
-  const tutorId = "" + t.user.id.toString() + "";
+  const tutorId = t.user.id;
   // console.log(tutorId);
 
   //refresh the page

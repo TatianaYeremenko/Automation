@@ -8,7 +8,7 @@ it("student requests a lesson directly but tutor rejects it", async () => {
   const s = await createQaUser("studentWithUmbrella");
 
   // get tutor name and id
-  const tutorId = t.user.id.toString();
+  const tutorId = t.user.id;
 
   await t.page.waitForTimeout(5000);
   await t.page.reload();
