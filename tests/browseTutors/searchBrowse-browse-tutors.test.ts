@@ -7,7 +7,6 @@ it("student is able to search a tutor and send a message", async () => {
 
   // get tutor name and id
   const tutorId = t.user.id;
-  // console.log(tutorId);
 
   //refresh the page
   await s.page.waitForTimeout(3000);

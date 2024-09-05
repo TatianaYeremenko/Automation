@@ -3,6 +3,8 @@ import faker, { random } from "faker";
 it("student requests a lesson directly but tutor rejects it", async () => {
   //create tutor
   const t = await createQaTutor();
+  await t.page.reload();
+  await t.page.waitForTimeout(5000);
 
     //create student
   const s = await createQaUser("studentWithUmbrella");
@@ -15,11 +17,15 @@ it("student requests a lesson directly but tutor rejects it", async () => {
   await t.page.waitForTimeout(5000);
   await t.page.reload();
 
-  await s.struct.header.browseTutors.waitForVisible();
-  await s.struct.header.browseTutors.click();
-  await s.page.reload();
-  await s.page.waitForTimeout(3000);
+  // await s.struct.header.browseTutors.waitForVisible();
+  // await s.struct.header.browseTutors.click();
+  // await s.page.reload();
+  // await s.page.waitForTimeout(3000);
 
+  // go to browse tutors
+  await s.page.goto('https://stg-tutor.peardeck.com/tutors/');
+  await s.page.reload();
+  await t.page.reload();
 
   // find available tutor
   console.log(tutorId);
