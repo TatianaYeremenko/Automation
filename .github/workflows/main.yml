@@ -97,7 +97,7 @@ jobs:
         run:  npm install
               npm audit fix
       - name: Run test
-        run:  npm test -- llessonSpaceFeatures-playground --runInBand      
+        run:  npm test -- lessonSpaceFeatures-playground --runInBand      
         
   AIMatchPal_Test:
     timeout-minutes: 600
