@@ -6,11 +6,6 @@ it('student can sign up via Student Account Creation Link', async () => {
         struct
     } = await createVisitor();
 
-    // await page.evaluate(async () => {
-    //     for (let i = 0; i < document.body.scrollHeight; i += 100) {
-    //       window.scrollTo(0, i);
-    //     }
-    //   });
     
       // click on Student Account Creation Link
     await struct.authPages.signIn.joinOrg.waitForVisible();
