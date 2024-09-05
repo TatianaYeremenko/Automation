@@ -3,19 +3,18 @@ import faker, { random } from "faker";
 it("student requests a lesson directly but tutor rejects it", async () => {
   //create tutor
   const t = await createQaTutor();
-  await t.page.waitForTimeout(7000);
 
+    //create student
   const s = await createQaUser("studentWithUmbrella");
 
   // get tutor name and id
   const tutorId = t.user.id.toString();
-  const name = t.user.shortName.toString();
-  const tutor_num = tutorId.toString();
 
-  //create student
+  await t.page.waitForTimeout(5000);
   await t.page.reload();
-  await t.page.waitForTimeout(3000);
-  
+  await t.page.waitForTimeout(5000);
+  await t.page.reload();
+
   await s.struct.header.browseTutors.waitForVisible();
   await s.struct.header.browseTutors.click();
   await s.page.reload();
@@ -23,11 +22,19 @@ it("student requests a lesson directly but tutor rejects it", async () => {
 
 
   // find available tutor
-  await s.struct.tutors.tutor(tutor_num).name.waitForVisible();
-  await s.struct.tutors.tutor(tutor_num).card.waitForVisible();
-  await s.struct.tutors.tutor(tutor_num).avatar.waitForVisible();
-  await s.struct.tutors.tutor(tutor_num).viewProfile.waitForVisible();
-  await s.struct.tutors.tutor(tutor_num).card.click();
+  console.log(tutorId);
+
+  await s.struct.tutors.tutor(tutorId).name.waitForVisible();
+  console.log(await s.struct.tutors.tutor(tutorId).name.text());
+
+  await s.struct.tutors.tutor(tutorId).card.waitForVisible();
+
+  await s.struct.tutors.tutor(tutorId).avatar.waitForVisible();
+
+  await s.struct.tutors.tutor(tutorId).viewProfile.waitForVisible();
+
+  await s.struct.tutors.tutor(tutorId).card.click();
+
 
   // chat
   await s.struct.tutorProfile.contact.waitForVisible();
