@@ -5,7 +5,7 @@ describe("Check that WL handbook is avalable to WL tutors only: ", () => {
   const nwemail = "dannygislason-no-wl-tutor@local.tutorme.com";
   const nwpassword = "Tutor12345";
 
-  const email ='wl-tutor@local.tutorme.com	' 
+  const email ='wl-tutor@local.tutorme.com' 
   const password ='Ff22558800!' 
 
 it('WL tutors can able to see the past lessons and avalable wl and wl handbook', async () => {
