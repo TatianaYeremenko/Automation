@@ -2,7 +2,7 @@ import faker, { random } from "faker";
 
 it("student is able to search a tutor and send a message", async () => {
   //create student and tutor
-  const t = await createQaUser("tutor");
+  const t = await createQaTutor();
   const s = await createQaUser("studentWithUmbrella");
 
   // get tutor name and id
@@ -11,12 +11,6 @@ it("student is able to search a tutor and send a message", async () => {
   //refresh the page
   await s.page.waitForTimeout(3000);
   await t.page.waitForTimeout(3000);
-
-  await (await t.page.waitForSelector('//button[contains(text(),"Review your subjects")]')).click();
-  await t.page.waitForTimeout(100);
-  await t.page.getByRole("button", { name: "Save selections" }).click();
-  await t.page.waitForTimeout(100);
-  await (await t.page.waitForSelector('//a[contains(text(),"Go to your account")]')).click();
  
 
   // go to browse tutors
@@ -25,7 +19,6 @@ it("student is able to search a tutor and send a message", async () => {
   await t.page.reload();
 
   // find available tutor
-  // await s.struct.tutors.tutor(tutorId).name.waitForVisible();
   await s.struct.tutors.tutor(tutorId).card.click();
 
   await s.struct.tutorProfile.contact.waitForVisible();
