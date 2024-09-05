@@ -3,7 +3,6 @@ import faker, { random } from "faker";
 it("student requests a lesson directly but tutor rejects it", async () => {
   //create tutor
   const t = await createQaTutor();
-  await t.page.reload();
   await t.page.waitForTimeout(5000);
 
     //create student
@@ -13,25 +12,19 @@ it("student requests a lesson directly but tutor rejects it", async () => {
   const tutorId = t.user.id;
 
   await t.page.waitForTimeout(5000);
-  await t.page.reload();
-  await t.page.waitForTimeout(5000);
-  await t.page.reload();
-
-  // await s.struct.header.browseTutors.waitForVisible();
-  // await s.struct.header.browseTutors.click();
-  // await s.page.reload();
-  // await s.page.waitForTimeout(3000);
 
   // go to browse tutors
-  await s.page.goto('https://stg-tutor.peardeck.com/tutors/');
-  await s.page.reload();
-  await t.page.reload();
+  await s.struct.header.browseTutors.waitForVisible();
+  await s.struct.header.browseTutors.click();
+  await s.page.waitForTimeout(3000);
 
   // find available tutor
-  console.log(tutorId);
+
+  // online now
+  await s.struct.tutors.filter.onlineNow.click();
+  await s.page.waitForTimeout(1000);
 
   await s.struct.tutors.tutor(tutorId).name.waitForVisible();
-  console.log(await s.struct.tutors.tutor(tutorId).name.text());
 
   await s.struct.tutors.tutor(tutorId).card.waitForVisible();
 

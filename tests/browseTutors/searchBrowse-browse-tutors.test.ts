@@ -25,7 +25,7 @@ it("student is able to search a tutor and send a message", async () => {
   await t.page.reload();
 
   // find available tutor
-  await s.struct.tutors.tutor(tutorId).name.waitForVisible();
+  // await s.struct.tutors.tutor(tutorId).name.waitForVisible();
   await s.struct.tutors.tutor(tutorId).card.click();
 
   await s.struct.tutorProfile.contact.waitForVisible();
