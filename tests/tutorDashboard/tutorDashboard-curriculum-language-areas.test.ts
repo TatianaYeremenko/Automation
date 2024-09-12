@@ -1,6 +1,5 @@
-import { values } from "lodash";
 
-it("Curriculum Areas is available and tutotrs able to edit", async () => {
+it("Subjects Page is available and tutors can able to edit it and save", async () => {
   //create tutor
   const { struct, page, user } =  await createQaTutor();
 
@@ -21,74 +20,36 @@ it("Curriculum Areas is available and tutotrs able to edit", async () => {
   await page.getByRole("link", { name: "Subjects and Skills" }).click();
   await page.keyboard.press("PageDown");
 
-  // check check-box values - need to fix this part
-  
-  // check other subjects
-  await (
-    await page.waitForSelector(
-      '//div[contains(text(),"General Computer Science")]'
-    )
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Python Programming")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Java Programming")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"C Programming")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"C++ Programming")]')
-  ).click();
+  await struct.account.subjects.subject(10002).waitForVisible();
+  expect(await struct.account.subjects.subject(10002).isChecked()).toBeTruthy();
 
-  await (
-    await page.waitForSelector('//div[contains(text(),"Spanish")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Education")]')
-  ).click();
-  await (await page.waitForSelector('//div[contains(text(),"Music")]')).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Microsoft Office")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Business")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Sociology")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Philosophy")]')
-  ).click();
-  await (
-    await page.waitForSelector('//div[contains(text(),"Public Health")]')
-  ).click();
-  await (
-    await page.waitForSelector(
-      '//div[contains(text(),"Library and Information Science")]'
-    )
-  ).click();
+  // clcik on Basic Math
+  await struct.account.subjects.subject(10002).click();
+  expect(await struct.account.subjects.subject(10002).isChecked()).not.toBeTruthy();
+
+  
 
   // check the information
   await (
     await page.waitForSelector(
-      '//div[contains(text(),"If you wish to add subjects that are currently disabled on your profil")]'
+      '//div[contains(text(),"If you wish to add subjects that are currently disabled on your profile, please contact the")]'
     )
   ).isVisible();
 
-  await (
-    await page.waitForSelector(
-      '//button[contains(text(),"support team")]'
-    )
-  ).isVisible();
-
+  // check support team link
+  await page.getByRole('button', { name: 'support team' }).click();
+  await page.frameLocator('iframe[name="intercom-messenger-frame"]').getByRole('button', { name: 'Send us a message' }).click();
+  await page.frameLocator('iframe[name="intercom-messenger-frame"]').getByPlaceholder('Message…').fill('help');
+  await page.frameLocator('iframe[name="intercom-messenger-frame"]').getByPlaceholder('Message…').press('Enter');
+  await page.waitForTimeout(2000);
+  await page.locator('//div[contains(text(),"get replies")]').isVisible();
+  await page.frameLocator('iframe[name="intercom-launcher-frame"]').getByTestId('launcher-with-badge-cutout-none').click();
 
     // submit the changes
     await struct.account.subjects.save.waitForVisible();
     await struct.account.subjects.save.click();
 
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(2000);
 
     // confirm the changes
     await struct.toast.success.waitForVisible();

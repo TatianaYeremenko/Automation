@@ -243,11 +243,11 @@ global.createQaTutor = function createQaTutor() {
     await page.click(`[name='${mode}']`, { timeout: 10000 });
     await page.waitForFunction("window.tutormeLoaded", { timeout: 10000 });
         
-    await (await page.waitForSelector('//button[contains(text(),"Review your subjects")]')).click();
-    await page.waitForTimeout(100);
-    await page.getByRole("button", { name: "Save selections" }).click();
-    await page.waitForTimeout(100);
-    await (await page.waitForSelector('//a[contains(text(),"Go to your account")]')).click();
+    // await (await page.waitForSelector('//button[contains(text(),"Review your subjects")]')).click();
+    // await page.waitForTimeout(100);
+    // await page.getByRole("button", { name: "Save selections" }).click();
+    // await page.waitForTimeout(100);
+    // await (await page.waitForSelector('//a[contains(text(),"Go to your account")]')).click();
 
     const user = await getUserData(page);
     if (!user) {
