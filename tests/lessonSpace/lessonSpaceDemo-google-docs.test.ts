@@ -17,43 +17,57 @@ describe('Visitor/Regular/Umbrella Demo Lesson Space - ', () => {
         await u.struct.header.userTools.username.click();
         await u.struct.userMenu.demoLessonSpace.click();
 
-        // Click on Calculator
+        // Click on Google Docs
         await u.struct.demoLessonSpace.google.click();
+        
+        // button are disabled
+        expect(await u.page.getByRole('main').locator('button').filter({ hasText: 'Launch Google Docs' }).isEnabled()).toBeFalsy();
+        expect(await u.page.getByRole('main').locator('button').filter({ hasText: 'Launch Google Sheets' }).isEnabled()).toBeFalsy();
+        expect(await u.page.getByRole('main').locator('button').filter({ hasText: 'Launch Google Slides' }).isEnabled()).toBeFalsy();
 
-        // open Google Doc
-        const [pageDoc] = await Promise.all([
-            u.page.waitForEvent('popup'),
-            u.page.getByRole('button', { name: 'Launch Google Docs Opens an external source' }).click(),
-            u.page.waitForTimeout(1000)
-        ]); 
+        // check full-screen feature
+        await u.struct.demoLessonSpace.fullScreen.click();
+        await u.page.locator('//button[@aria-label="Exit Full Screen"]').isVisible();
+
+        // click again
+        await u.struct.demoLessonSpace.fullScreen.click();
+        await u.page.locator('//button[@aria-label="Full Screen (Lesson Space)"]').isVisible();
+
+
+        // open Google Doc should not be available with the latest changes - https://goguardian.atlassian.net/issues/PDTT-342
+        // const [pageDoc] = await Promise.all([
+        //     u.page.waitForEvent('popup'),
+        //     u.page.getByRole('button', { name: 'Launch Google Docs Opens an external source' }).click(),
+        //     u.page.waitForTimeout(1000)
+        // ]); 
                                  
-        // Check url
-        expect(pageDoc.url()).toContain('docs.google.com/document');
+        // // Check url
+        // expect(pageDoc.url()).toContain('docs.google.com/document');
 
-        // open Google Spread Sheet
-        const [pageSheet] = await Promise.all([
-            u.page.waitForEvent('popup'),
-            u.page.getByRole('button', { name: 'Launch Google Sheets Opens an external source' }).click(),
-            u.page.waitForTimeout(1000)
+        // // open Google Spread Sheet
+        // const [pageSheet] = await Promise.all([
+        //     u.page.waitForEvent('popup'),
+        //     u.page.getByRole('button', { name: 'Launch Google Sheets Opens an external source' }).click(),
+        //     u.page.waitForTimeout(1000)
 
-        ]);               
-        // Check url
-        expect(pageSheet.url()).toContain('docs.google.com/spreadsheets');
+        // ]);               
+        // // Check url
+        // expect(pageSheet.url()).toContain('docs.google.com/spreadsheets');
  
-        // open Google Presentation
-        const [pagePres] = await Promise.all([
-            u.page.waitForEvent('popup'),
-            u.page.getByRole('button', { name: 'Launch Google Slides Opens an external source' }).click(),
-            u.page.waitForTimeout(1000)
+        // // open Google Presentation
+        // const [pagePres] = await Promise.all([
+        //     u.page.waitForEvent('popup'),
+        //     u.page.getByRole('button', { name: 'Launch Google Slides Opens an external source' }).click(),
+        //     u.page.waitForTimeout(1000)
 
-        ]);               
-        // Check url
-        expect(pagePres.url()).toContain('docs.google.com/presentation');
+        // ]);               
+        // // Check url
+        // expect(pagePres.url()).toContain('docs.google.com/presentation');
         
         // close all pages
-        pageDoc.close();
-        pageSheet.close();
-        pagePres.close();
+        // pageDoc.close();
+        // pageSheet.close();
+        // pagePres.close();
 
         await u.struct.demoLessonSpace.header.exit.click();
 

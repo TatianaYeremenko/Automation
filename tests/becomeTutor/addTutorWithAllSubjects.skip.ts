@@ -217,15 +217,9 @@ describe("Create Tutor Accounts with all subjects: ", () => {
         .getByRole("menuitem", { name: "Switch to tutor mode" })
         .click();
 
-      await (
-        await a.page.waitForSelector(
-          '//button[contains(text(),"Review your subjects")]'
-        )
-      ).click();
-      await a.page.waitForTimeout(100);
-
       // check other subjects
-      // await a.page.getByRole("link", { name: "Subjects and Skills" }).click();
+      await a.page.getByRole("link", { name: "Subjects and Skills" }).click();
+
       // add subjects
       const list_subjects = [
         // 10002, 10007, 10012, 10012, 
@@ -270,13 +264,6 @@ describe("Create Tutor Accounts with all subjects: ", () => {
       await a.page
         .getByTestId("account.tutorProfile.gender.option(4).option")
         .click();
-      await a.page.waitForTimeout(1000);
-
-      // enter about
-      await a.page.getByTestId("account.tutorProfile.about").click();
-      await a.page
-        .getByTestId("account.tutorProfile.about")
-        .fill("About me: " + product + " " + faker.lorem.sentence(15));
       await a.page.waitForTimeout(1000);
 
       // add teaching experiance

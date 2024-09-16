@@ -56,7 +56,7 @@ it.each`
   ${'Female'}| ${f_email} | ${femalesExamples} | ${f_userFirstName} | ${f_userLastName}|
 `
 (
-  '$gender Tutor is added through Admin Panel - user name is $email and password is $password',
+  '$gender Tutor is added through Admin Panel - user name is $email and password is "Tutor12345!"',
   async ({ email, avatar, userFirstName, userLastName }) => {
     const a = await createAdmin();
 
@@ -220,12 +220,12 @@ it.each`
       .getByRole("menuitem", { name: "Switch to tutor mode" })
       .click();
 
-
-    await (await a.page.waitForSelector('//button[contains(text(),"Review your subjects")]')).click();
-    await a.page.waitForTimeout(100);
-    await a.page.getByRole("button", { name: "Save selections" }).click();
-    await a.page.waitForTimeout(100);
-    await (await a.page.waitForSelector('//a[contains(text(),"Go to your account")]')).click();
+// not visiable any longer
+    // await (await a.page.waitForSelector('//button[contains(text(),"Review your subjects")]')).click();
+    // await a.page.waitForTimeout(100);
+    // await a.page.getByRole("button", { name: "Save selections" }).click();
+    // await a.page.waitForTimeout(100);
+    // await (await a.page.waitForSelector('//a[contains(text(),"Go to your account")]')).click();
     
 
     await a.page
