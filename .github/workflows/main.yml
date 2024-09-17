@@ -81,7 +81,7 @@ jobs:
       - name: Run test
         run:  npm test -- lessonSpaceDemo --runInBand
 
-  PrepPlay-Test:
+  LessonSpace-Test:
     timeout-minutes: 600
     runs-on: ubuntu-latest
     steps:
@@ -97,7 +97,25 @@ jobs:
         run:  npm install
               npm audit fix
       - name: Run test
-        run:  npm test -- lessonSpaceFeatures-playground --runInBand      
+        run:  npm test -- lessonSpaceFeatures --runInBand
+
+  TechPlanPopup-Test:
+    timeout-minutes: 600
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 20
+      - name: Config npm
+        run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}  
+      - name: Install NPM
+        run:  npm install
+              npm audit fix
+      - name: Run test
+        run:  npm test -- connection-tech-issues-popup --runInBand      
         
   AIMatchPal_Test:
     timeout-minutes: 600
