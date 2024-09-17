@@ -3,61 +3,54 @@ import faker, { random } from "faker";
 describe("live lesson - ", () => {
   it("student/tutor Lesson Tools: PlayGround is available and working for st", async () => {
     //create tutor
-    const t = await createVisitor();
+    const s = await createQaUser('studentWithUmbrella');
+    const t = await createQaTutor();
 
-    // sign-in as a tutor
-    await t.struct.authPages.signIn.email.waitForVisible();
-    await t.struct.authPages.signIn.email.fill
-    ("prepandplaydraw@local.tutorme.com");
+    //request Publict Request
 
-    await t.struct.authPages.signIn.password.waitForVisible();
-    await t.struct.authPages.signIn.password.type("Tutor12345!");
-
-    await t.page.waitForTimeout(2000);
-    await fillRecaptcha(t.struct.authPages.signIn.recaptcha);
-    await t.page.waitForTimeout(1000);
-
-    await t.struct.authPages.signIn.signIn.waitForVisible();
-    await t.struct.authPages.signIn.signIn.click();
-    await t.page.waitForTimeout(2000);
-    
-    // get in the queue
-    await (await t.page.waitForSelector('//div[contains(text(),"Enter the tutoring queue?")]')).isVisible();
-    await (await t.page.waitForSelector('//div[contains(text(),"Enter the tutoring queue?")]')).click();
-    
-    //create student
-    const s = await createQaUser("studentWithUmbrella");
-    const studentId = "" + s.user.id.toString() + "";
-
-    // submit the request
     await s.struct.homepage.requestATutor.waitForVisible();
     await s.struct.homepage.requestATutor.click();
+    await s.page.waitForTimeout(200);
 
-    await s.page.locator('label').filter({ hasText: '5th grade' }).click();
-    await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.locator('label').filter({ hasText: 'Math' }).click();
-    await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.locator('label').filter({ hasText: 'Basic Math' }).click();
-    await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.getByTestId('sessionRequest.description').click();
-    await s.page.getByTestId('sessionRequest.description').fill('If y(x-1)=z then x=');
-    await s.page.waitForTimeout(2000);
+    // select subject
+    await s.page.getByText("Kindergarten").click();
+    await s.page.waitForTimeout(200);
 
     await s.struct.sessionRequest.nextArrow.click();
-    await s.page.waitForTimeout(1000);
+    await s.page.waitForTimeout(200);
 
-    await s.page.locator('label').filter({ hasText: 'I am so lost' }).click();
+    await s.page.locator("label").filter({ hasText: "Math" }).click();
+    await s.page.waitForTimeout(200);
 
-    await s.page.locator('label').filter({ hasText: 'Audio only' }).click();
     await s.struct.sessionRequest.nextArrow.click();
+    await s.page.waitForTimeout(200);
 
-    // move to the confirmation page
+    await s.page.locator("label").filter({ hasText: "Basic Math" }).click();
+    await s.page.waitForTimeout(200);
+
+    await s.struct.sessionRequest.nextArrow.click();
+    await s.page.waitForTimeout(200);
+
+    // fill out the form
+    const text = `Automation - Lesson submitted from  ${faker.lorem.sentence(10).toString()}`;
+    await s.struct.sessionRequest.description.fill(text);
+    await s.struct.sessionRequest.nextArrow.click();
+    await s.page.waitForTimeout(200);
+
+    await s.page
+      .locator("label")
+      .filter({ hasText: "I'm starting to get it" })
+      .locator("svg")
+      .click();
+    await s.page.waitForTimeout(200);
+
+    await s.page.locator("label").filter({ hasText: "Audio only" }).click();
+    await s.struct.sessionRequest.next.click();
+    await s.page.waitForTimeout(200);
+
     await s.struct.sessionRequest.codeOfConduct.click();
     await s.struct.sessionRequest.requestTutor.click();
-    await s.page.waitForTimeout(1000);
+    await s.page.waitForTimeout(200);
 
     // PLAY GAME MENUE IS AVALABLE
 
@@ -94,11 +87,6 @@ describe("live lesson - ", () => {
 
     //Whiteboard tools link is available and working
     await s.struct.lessonSpace.gamePanel.whiteboardtools.waitForVisible();
-    // await s.struct.lessonSpace.gamePanel.whiteboardtools.click();
-
-    // Tip Box should show up
-    // await s.page.getByText('Use the Line or Freehand tools to circle the words you find in the grid.').isVisible();
-    // await (await s.page.waitForSelector('//button[contains(text(),"Got it")]')).click();
 
     // Students can access examples of drawings
     await s.struct.lessonSpace.whiteboard.items.drawFrame('Draw a castle').waitForVisible();
@@ -118,6 +106,16 @@ describe("live lesson - ", () => {
     await s.page.waitForTimeout(1000);
 
     //tutor claims it
+
+    // tutor switch on
+    await t.page
+      .locator('//button[@aria-label="Enter the tutoring queue? off"]')
+      .isVisible();
+    await t.page
+      .locator('//button[@aria-label="Enter the tutoring queue? off"]')
+      .click();
+    await t.page.waitForTimeout(3000);
+
     await t.struct.modals.claimLesson.content.claim.waitForVisible();
     await t.struct.modals.claimLesson.content.claim.click();
     await t.page.waitForTimeout(1000);
@@ -127,8 +125,10 @@ describe("live lesson - ", () => {
 
     await s.page.waitForTimeout(7000);
 
-    // await t.struct.lessonSpace.header.timerTooltipGotIt.waitForVisible();
-    // await t.struct.lessonSpace.header.timerTooltipGotIt.click();
+    await t.page
+    .locator('//*[@id="react-app"]/div/div[4]/header/div[2]/div[1]/div[2]/div/button')
+    .press('Enter');
+
 
     // check the drawings
     await t.struct.lessonSpace.whiteboardButton.waitForVisible();

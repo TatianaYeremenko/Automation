@@ -28,7 +28,7 @@ it("tutor is able to turn Enter the tutoring queue? on", async () => {
       )
       .isVisible();
   
-    // turon switch on
+    // tutor switch on
     await page
       .locator('//button[@aria-label="Enter the tutoring queue? off"]')
       .isVisible();

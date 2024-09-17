@@ -1,8 +1,7 @@
 import faker, { random } from "faker";
 
 describe("live lesson - ", () => {
-  it("student/tutor Lesson Tools: Text Editor is available and working for both", async () => {
-
+  it("student/tutor Lesson Tools: ScreenSaring functionalities are available", async () => {
     // connect with a student
     const s = await createQaUser('studentWithUmbrella');
 
@@ -79,85 +78,14 @@ describe("live lesson - ", () => {
     .locator('//*[@id="react-app"]/div/div[4]/header/div[2]/div[1]/div[2]/div/button')
     .press('Enter');
 
-    // Click on Text Editor
-    await s.struct.lessonSpace.textEditorButton.click();
+    // student click on share screen
+    await t.struct.lessonSpace.video.toggleFullscreen.click();
+    await s.page.waitForTimeout(1000);
 
-    // Click on Text
-    for (const i of [12, 24]) {
-      await s.struct.lessonSpace.textEditor.fontSize.selectBase.click();
-      await s.struct.lessonSpace.textEditor.fontSize.item(i).click();
-    }
-    //Select color
-    await s.struct.lessonSpace.textEditor.fontColor.selectBase.click();
-
-    // Click on each
-    const textEditButtons = [
-      "bold",
-      "italic",
-      "underline",
-      "strike",
-      "highlight",
-      "orderedList",
-      "unorderedList",
-      "todoList",
-      "leftAlign",
-      "centerAlign",
-      "rightAlign",
-      "indent",
-      "unindent",
-      "undo",
-      "redo",
-    ] as const;
-    for (const item of textEditButtons) {
-      await s.struct.lessonSpace.textEditor[item].click();
-    }
-    await s.struct.lessonSpace.textEditor.todoList.click();
-    await s.struct.lessonSpace.textEditor.todoList.click();
-
-    //check accessibility module
-    await s.struct.lessonSpace.textEditor.accessibility.click();
-    await s.struct.modals.textEditorAccessibility.waitForVisible();
-    await s.struct.modals.textEditorAccessibility.content.close.click();
-
-    //check LATEX
-    await s.struct.lessonSpace.textEditor.latex.button.click();
-    await s.struct.lessonSpace.textEditor.latex.textArea.type("2^2");
-    await s.struct.lessonSpace.textEditor.latex.apply.click();
-    expect(await s.struct.lessonSpace.textEditor.textArea.text()).toContain(
-      "22Powered"
-    );
-
-    //click again and click on Help
-    await s.struct.lessonSpace.textEditor.latex.button.click();
-    const [pageHelp] = await Promise.all([
-      s.page.waitForEvent("popup"),
-      s.struct.lessonSpace.textEditor.latex.help.click(),
-    ]);
-
-    // Check url
-    expect(pageHelp.url()).toBe(
-      "https://help.tutor.peardeck.com/en/articles/984358-how-do-i-write-math-expressions-latex"
-    );
-
-    //close page
-    await pageHelp.close();
-
-    //tutor sees the same
-
-    // Click on Text Editor
-    await t.struct.lessonSpace.textEditorButton.click();
-
-    for (const item of textEditButtons) {
-      await t.struct.lessonSpace.textEditor[item].click();
-    }
-    await t.struct.lessonSpace.textEditor.todoList.click();
-
-    expect(await t.struct.lessonSpace.textEditor.textArea.text()).toContain(
-      "22Powered"
-    );
+    // student click on share screen
+    await s.struct.lessonSpace.screenShareSwitch.click(); // Click triggers a popup.
 
     //end the lesson
-    await t.struct.lessonSpace.header.end.waitForHidden();
     await s.struct.lessonSpace.header.end.waitForVisible();
     await s.struct.lessonSpace.header.end.click();
 
@@ -167,9 +95,8 @@ describe("live lesson - ", () => {
     await s.struct.modals.endLesson.content.end.click();
 
     //student return to the dashboard
-    await s.struct.modals.somethingWentWrong.content.browseTutors.waitForVisible();
-    await s.struct.modals.somethingWentWrong.content.browseTutors.click();
-    await s.page.waitForTimeout(2000);
+    await s.struct.modals.somethingWentWrong.content.goToDashboard.waitForVisible();
+    await s.struct.modals.somethingWentWrong.content.goToDashboard.click();
 
     // click on user menu
     await s.struct.header.userTools.username.click();
@@ -178,11 +105,10 @@ describe("live lesson - ", () => {
     //tutor return to the dashboard
     await t.struct.modals.somethingWentWrong.content.goToDashboard.waitForVisible();
     await t.struct.modals.somethingWentWrong.content.goToDashboard.click();
-    await t.page.waitForTimeout(1000);    
+    await t.page.waitForTimeout(1000);        
 
     //tutor signs out
     await t.struct.tutorDashboard.header.userTools.username.click();
     await t.struct.userMenu.signOut.click();
-    
   });
 });

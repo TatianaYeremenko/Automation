@@ -106,6 +106,8 @@ describe("Lesson Connection: ", () => {
       await (
         await t.page.waitForSelector('//a[contains(text(),"View")]')
       ).click();
+      await t.page.waitForTimeout(200);
+
 
       // see the discription text
       expect(await t.page.locator('//span[@class="Linkify"]').innerText()).toBe(
@@ -114,6 +116,13 @@ describe("Lesson Connection: ", () => {
 
       t.struct.pastLessonSpace.header.title.waitForVisible();
       t.struct.pastLessonSpace.header.exit.click();
+      await t.page.waitForTimeout(200);
+
+      // check if the switch si still on
+      await t.page.reload();
+      await t.page
+      .locator('//button[@aria-label="Enter the tutoring queue? on"]')
+      .isVisible();     
 
       // click on user menu
       await t.struct.tutorDashboard.header.userTools.username.click();

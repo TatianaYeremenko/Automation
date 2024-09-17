@@ -3,37 +3,54 @@ import faker, { random } from "faker";
 describe("live lesson - ", () => {
   it("Math Game in PlayGround is available and working", async () => {  
     //create student
-    const s = await createQaUser("studentWithUmbrella");
-    
-    // submit the request
+    const s = await createQaUser('studentWithUmbrella');
+    const t = await createQaTutor();
+
+    //request Publict Request
+
     await s.struct.homepage.requestATutor.waitForVisible();
     await s.struct.homepage.requestATutor.click();
+    await s.page.waitForTimeout(200);
 
-    await s.page.locator('label').filter({ hasText: '5th grade' }).click();
-    await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.locator('label').filter({ hasText: 'Math' }).click();
-    await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.locator('label').filter({ hasText: 'Basic Math' }).click();
-    await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.getByTestId('sessionRequest.description').click();
-    await s.page.getByTestId('sessionRequest.description').fill('checking Math game here');
-    await s.page.waitForTimeout(2000);
+    // select subject
+    await s.page.getByText("Kindergarten").click();
+    await s.page.waitForTimeout(200);
 
     await s.struct.sessionRequest.nextArrow.click();
-    await s.page.waitForTimeout(1000);
+    await s.page.waitForTimeout(200);
 
-    await s.page.locator('label').filter({ hasText: 'I am so lost' }).click();
+    await s.page.locator("label").filter({ hasText: "Math" }).click();
+    await s.page.waitForTimeout(200);
 
-    await s.page.locator('label').filter({ hasText: 'Audio only' }).click();
     await s.struct.sessionRequest.nextArrow.click();
+    await s.page.waitForTimeout(200);
 
-    // move to the confirmation page
+    await s.page.locator("label").filter({ hasText: "Basic Math" }).click();
+    await s.page.waitForTimeout(200);
+
+    await s.struct.sessionRequest.nextArrow.click();
+    await s.page.waitForTimeout(200);
+
+    // fill out the form
+    const text = `Automation - Lesson submitted from  ${faker.lorem.sentence(10).toString()}`;
+    await s.struct.sessionRequest.description.fill(text);
+    await s.struct.sessionRequest.nextArrow.click();
+    await s.page.waitForTimeout(200);
+
+    await s.page
+      .locator("label")
+      .filter({ hasText: "I'm starting to get it" })
+      .locator("svg")
+      .click();
+    await s.page.waitForTimeout(200);
+
+    await s.page.locator("label").filter({ hasText: "Audio only" }).click();
+    await s.struct.sessionRequest.next.click();
+    await s.page.waitForTimeout(200);
+
     await s.struct.sessionRequest.codeOfConduct.click();
     await s.struct.sessionRequest.requestTutor.click();
-    await s.page.waitForTimeout(1000);
+    await s.page.waitForTimeout(200);
 
     // PLAY GAME MENUE IS AVALABLE
 

@@ -8,19 +8,33 @@ describe("live lesson - ", () => {
     //connect with a tutor
     await s.struct.homepage.requestATutor.waitForVisible();
     await s.struct.homepage.requestATutor.click();
+    await s.page.waitForTimeout(200);
 
-    await s.page.locator('label').filter({ hasText: '5th grade' }).click();
+    // select subject
+    await s.page.getByText("Kindergarten").click();
+    await s.page.waitForTimeout(200);
+
     await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.locator('label').filter({ hasText: 'Math' }).click();
+    await s.page.waitForTimeout(200);
+
+    await s.page.locator("label").filter({ hasText: "Math" }).click();
+    await s.page.waitForTimeout(200);
+
     await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.locator('label').filter({ hasText: 'Basic Math' }).click();
+    await s.page.waitForTimeout(200);
+
+    await s.page.locator("label").filter({ hasText: "Basic Math" }).click();
+    await s.page.waitForTimeout(200);
+
     await s.struct.sessionRequest.nextArrow.click();
-  
-    await s.page.getByTestId('sessionRequest.description').click();
-    await s.page.getByTestId('sessionRequest.description').fill('If y(x-1)=z then x=');
-    await s.page.waitForTimeout(2000);
+    await s.page.waitForTimeout(200);
+
+    // fill out the form
+    const text = `Automation - Lesson submitted from  ${faker.lorem
+      .sentence(10)
+      .toString()}`;
+    await s.struct.sessionRequest.description.fill(text);
+    await s.page.waitForTimeout(200);
 
     // add files
     const fileExamples = [
@@ -32,47 +46,51 @@ describe("live lesson - ", () => {
     await s.struct.sessionRequest.uploadFile.input.click();
     await s.struct.sessionRequest.uploadFile.input.selectFiles(fileExamples[0]);
     await s.page.waitForTimeout(1000);
-
-    await s.struct.sessionRequest.nextArrow.click();
-    await s.page.waitForTimeout(1000);
-
-    // await s.page.locator('//div/p[contains(text(),"I am so lost")]').clear();
-    await s.page.locator('label').filter({ hasText: 'I am so lost' }).click();
-    // await s.struct.sessionRequest.nextArrow.click();
-
-    await s.page.locator('label').filter({ hasText: 'Audio only' }).click();
     await s.struct.sessionRequest.nextArrow.click();
 
-    // move to the confirmation page
+    await s.page
+      .locator("label")
+      .filter({ hasText: "I'm starting to get it" })
+      .locator("svg")
+      .click();
+    await s.page.waitForTimeout(200);
+
+    await s.page.locator("label").filter({ hasText: "Audio only" }).click();
+    await s.struct.sessionRequest.next.click();
+    await s.page.waitForTimeout(200);
+
     await s.struct.sessionRequest.codeOfConduct.click();
     await s.struct.sessionRequest.requestTutor.click();
-    await s.page.waitForTimeout(1000);
+    await s.page.waitForTimeout(200);
 
+    //create tutor
     const t = await createQaUser("tutor");
+
+    // tutor switch on
+    await t.page
+      .locator('//button[@aria-label="Enter the tutoring queue? off"]')
+      .isVisible();
+    await t.page
+      .locator('//button[@aria-label="Enter the tutoring queue? off"]')
+      .click();
     await t.page.waitForTimeout(2000);
 
-    // tutor click on "live lesson
-    await t.struct.tutorDashboard.header.pastTutoring.waitForVisible();
-    await t.struct.tutorDashboard.header.pastTutoring.click();
-
-    await t.struct.tutorDashboard.header.availableTutoring.waitForVisible();
-    await t.struct.tutorDashboard.header.availableTutoring.click();
-
-    await t.page.waitForSelector('text="Claim session"');
-    await t.page.click('text="Claim session"');
-    await t.page.waitForTimeout(1000);
-
     // claim the lesson
-    await (await t.page.waitForSelector('//button[contains(text(),"Claim session")]')).click();
-    
-    //student enter the lesson
-    await s.struct.waitingRoom.enterLesson.waitForVisible();
-    await s.struct.waitingRoom.enterLesson.click();
-    await s.page.waitForTimeout(1000);
+    await t.struct.modals.claimLesson.waitForVisible();
+    await t.struct.modals.claimLesson.content.claim.click();
 
     //tutor confirm that a new student
-    const new_student = await t.page.waitForSelector('text="Got it"');
-    await new_student.click();
+    await t.struct.modals.firstTime.waitForVisible();
+    await t.struct.modals.firstTime.content.gotIt.waitForVisible();
+    await t.struct.modals.firstTime.content.gotIt.click();
+
+    await t.page
+    .locator(
+      '//*[@id="react-app"]/div/div[4]/header/div[2]/div[1]/div[2]/div/button'
+    )
+    .press("Enter");
+    
+    await t.page.waitForTimeout(10000);
 
     // student click on File Sharing
     await s.struct.lessonSpace.fileUpload.click();
@@ -83,10 +101,13 @@ describe("live lesson - ", () => {
     await s.struct.lessonSpace.documents.uploadInput.selectFiles(
       fileExamples[1]
     );
+    await s.page.waitForTimeout(3000);
+
 
     // tutor click on File Sharing
     await t.struct.lessonSpace.fileUpload.click();
-    await t.page.waitForTimeout(500);
+    await t.page.waitForTimeout(300);
+
 
     // tutor click on File Sharing
     expect(
@@ -95,6 +116,14 @@ describe("live lesson - ", () => {
         9
       )
     ).toBe("example_1");
+
+    console.log(
+      (await t.struct.lessonSpace.documents.tutorFiles(1).name.text()).slice(
+        0,
+        9
+      )
+    );
+
     expect(
       (await t.struct.lessonSpace.documents.tutorFiles(1).name.text()).slice(
         0,
@@ -129,11 +158,10 @@ describe("live lesson - ", () => {
     //tutor return to the dashboard
     await t.struct.modals.somethingWentWrong.content.goToDashboard.waitForVisible();
     await t.struct.modals.somethingWentWrong.content.goToDashboard.click();
-    await t.page.waitForTimeout(1000);    
+    await t.page.waitForTimeout(1000);
 
     //tutor signs out
     await t.struct.tutorDashboard.header.userTools.username.click();
     await t.struct.userMenu.signOut.click();
-    
   });
 });
