@@ -9,13 +9,6 @@ it("Three different tutors cancel WL", async () => {
 
     // tutor click on "live lesson
 
-    await (await t.page.waitForSelector('//button[contains(text(),"Review your subjects")]')).click();
-    await t.page.waitForTimeout(100);
-    await t.page.getByRole("button", { name: "Save selections" }).click();
-    await t.page.waitForTimeout(100);
-    await (await t.page.waitForSelector('//a[contains(text(),"Go to your account")]')).click();
-    await t.page.waitForTimeout(500);
-
     // red dot is visible
     await t.page.locator('//*[@id="react-app"]/div/div[4]/div/nav/div[2]/div[1]/div/a/div').isVisible();
 
