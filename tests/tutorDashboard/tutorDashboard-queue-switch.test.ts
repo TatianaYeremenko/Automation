@@ -4,11 +4,6 @@ it("tutor is able to turn Enter the tutoring queue? on", async () => {
   
     await page.waitForTimeout(1000);
   
-    // click on Bell Available Tutoring
-    await struct.tutorDashboard.header.availableTutoring.waitForVisible();
-    await struct.tutorDashboard.header.availableTutoring.click();
-    await page.waitForTimeout(1000);
-  
     // Get matched with live tutoring requests
     await page
       .locator('//h3[contains(text(),"Get matched with live tutoring requests")]')

@@ -5,18 +5,17 @@ it("tutor is able to see WL page", async () => {
   await page.waitForTimeout(1000);
   // click on Bell Available Tutoring
   await struct.tutorDashboard.header.availableTutoring.waitForVisible();
-  await struct.tutorDashboard.header.availableTutoring.click();
   await page.waitForTimeout(1000);
 
   // WL Tab
   await page
     .locator(
-      '//*[@id="react-app"]/div/div[4]/div/div/nav/div[2]/div[1]/div/a/span'
+      '//a[@href="/writing-labs/"]'
     )
     .isVisible();
   await page
     .locator(
-      '//*[@id="react-app"]/div/div[4]/div/div/nav/div[2]/div[1]/div/a/span'
+      '//a[@href="/writing-labs/"]'
     )
     .click();
 
