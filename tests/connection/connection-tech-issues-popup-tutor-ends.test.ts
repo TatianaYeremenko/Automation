@@ -81,11 +81,15 @@ describe("Lesson Connection: ", () => {
       await t.struct.modals.firstTime.waitForVisible();
       await t.struct.modals.firstTime.content.gotIt.waitForVisible();
       await t.struct.modals.firstTime.content.gotIt.click();
+
+      await t.page
+      .locator('//*[@id="react-app"]/div/div[4]/header/div[2]/div[1]/div[2]/div/button')
+      .press('Enter');
       await t.page.waitForTimeout(10000);
 
       //tutor closes the window
       await t.page.close();
-      await s.page.waitForTimeout(3000);
+      await s.page.waitForTimeout(5000);
 
       //Technical Difficulties module pops up
       await s.struct.modals.awaitingOpponent.waitForVisible();

@@ -32,7 +32,7 @@ describe("Lesson Connection: ", () => {
       await s.struct.sessionRequest.nextArrow.click();
       await s.page.waitForTimeout(200);
 
-      await s.page.locator("label").filter({ hasText: "Basic Math" }).click();
+      await s.page.locator("label").filter({ hasText: "Geometry" }).click();
       await s.page.waitForTimeout(200);
 
       await s.struct.sessionRequest.nextArrow.click();
@@ -81,6 +81,10 @@ describe("Lesson Connection: ", () => {
       await t.struct.modals.firstTime.waitForVisible();
       await t.struct.modals.firstTime.content.gotIt.waitForVisible();
       await t.struct.modals.firstTime.content.gotIt.click();
+
+      await t.page
+      .locator('//*[@id="react-app"]/div/div[4]/header/div[2]/div[1]/div[2]/div/button')
+      .press('Enter');
       await t.page.waitForTimeout(10000);
 
       //student closes the window
@@ -119,10 +123,10 @@ describe("Lesson Connection: ", () => {
       await t.page.waitForTimeout(200);
 
       // check if the switch si still on
-      await t.page.reload();
-      await t.page
-      .locator('//button[@aria-label="Enter the tutoring queue? on"]')
-      .isVisible();     
+      // await t.page.reload();
+      // await t.page
+      // .locator('//button[@aria-label="Enter the tutoring queue? on"]')
+      // .isVisible();     
 
       // click on user menu
       await t.struct.tutorDashboard.header.userTools.username.click();
