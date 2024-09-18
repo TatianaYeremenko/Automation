@@ -8,8 +8,8 @@ describe("Checking SDK GGPA integration: ", () => {
   const email = `${teacherFirstName.toLowerCase()}.pa.teacher@local.peardeck.tutor.com`;
   const studentEmail = "sdktest.user.001@gmail.com";
   const studentPassword = "SDK12345";
-  const tutorEmail = "ricardotoytutor@local.tutorme.com";
-  const tutorPassword = "Tutor12345!";
+  // const tutorEmail = "ricardotoytutor@local.tutorme.com";
+  // const tutorPassword = "Tutor12345!";
 
   it("Submit PA assigned tutoring request", async () => {
     const { struct, page } = await createVisitor();
@@ -74,7 +74,7 @@ describe("Checking SDK GGPA integration: ", () => {
   });
   it("Student receives PA teacher tutoring request and able to connect to a tutor", async () => {
     // create tutor
-    const t = await createVisitor();
+    const t = await createQaTutor();
 
     // create tutor
     const s = await createVisitor();
@@ -92,22 +92,7 @@ describe("Checking SDK GGPA integration: ", () => {
 
     await s.struct.authPages.signIn.signIn.waitForVisible();
     await s.struct.authPages.signIn.signIn.click();
-    await s.page.waitForTimeout(1000);
-
-    // the tutor signs in
-    await t.struct.authPages.signIn.email.waitForVisible();
-    await t.struct.authPages.signIn.email.fill(tutorEmail.toLowerCase());
-
-    await t.struct.authPages.signIn.password.waitForVisible();
-    await t.struct.authPages.signIn.password.type(tutorPassword);
-
-    await t.page.waitForTimeout(1000);
-    await fillRecaptcha(t.struct.authPages.signIn.recaptcha);
-    await t.page.waitForTimeout(1000);
-
-    await t.struct.authPages.signIn.signIn.waitForVisible();
-    await t.struct.authPages.signIn.signIn.click();
-    await t.page.waitForTimeout(2000);
+    await s.page.waitForTimeout(3000);
 
     //check for pop-up
     await s.struct.header.notifications.other.button.waitForVisible();

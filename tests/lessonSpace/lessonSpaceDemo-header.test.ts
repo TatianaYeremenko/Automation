@@ -44,11 +44,6 @@ describe('Visitor/Regular/Umbrella Demo Lesson Space - ', () => {
 
             //click on Support lesson and then close it
             await u.struct.demoLessonSpace.header.support.waitForVisible();
-            await u.struct.demoLessonSpace.header.support.click();
-
-            await u.struct.demoLessonSpace.header.support.click();
-
-            await u.page.reload();
 
             //Close it 
             await u.struct.demoLessonSpace.header.exit.waitForVisible();

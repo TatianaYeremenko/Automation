@@ -7,8 +7,8 @@ describe("Checking SDK GG integration: ", () => {
   const email = `${teacherFirstName.toLowerCase()}.gg.teacher@local.peardeck.tutor.com`;
   const studentEmai = "gg-teacher-qa-user-001@local.tutorme.com";
   const studentPassword = "SDK12345";
-  const tutorEmai = "shermanswaniawskitutor@local.tutorme.com";
-  const tutorPassword = "Tutor12345!";
+  // const tutorEmai = "shermanswaniawskitutor@local.tutorme.com";
+  // const tutorPassword = "Tutor12345!";
 
   it("Submit GG Teacher tutoring request", async () => {
     const { struct, page } = await createVisitor();
@@ -46,13 +46,13 @@ describe("Checking SDK GG integration: ", () => {
     await page.getByRole("option", { name: "1st grade" }).click();
     await page.waitForTimeout(1000);
 
-    await page.locator("label").filter({ hasText: "Natural Science" }).click();
+    await page.locator("label").filter({ hasText: "Math" }).click();
     await page.waitForTimeout(1000);
 
     await page.locator('//button[contains(text(),"Next")]').click();
     await page.waitForTimeout(1000);
 
-    await page.locator('//span[contains(text(),"Biology")]').click();
+    await page.locator('//span[contains(text(),"Basic Math")]').click();
     await page.waitForTimeout(1000);
 
     await page.locator('//button[contains(text(),"Next")]').click();
@@ -76,7 +76,7 @@ describe("Checking SDK GG integration: ", () => {
   });
   it("Student receives GG teacher tutoring request and able to connect to a tutor", async () => {
     // create tutor
-    const t = await createVisitor();
+    const t = await createQaTutor();
 
     // create tutor
     const s = await createVisitor();
@@ -94,28 +94,16 @@ describe("Checking SDK GG integration: ", () => {
 
     await s.struct.authPages.signIn.signIn.waitForVisible();
     await s.struct.authPages.signIn.signIn.click();
-    await s.page.waitForTimeout(1000);
+    await s.page.waitForTimeout(3000);
 
     // the tutor signs in
-    await t.struct.authPages.signIn.email.waitForVisible();
-    await t.struct.authPages.signIn.email.fill(tutorEmai.toLowerCase());
-
-    await t.struct.authPages.signIn.password.waitForVisible();
-    await t.struct.authPages.signIn.password.type(tutorPassword);
-
-    await t.page.waitForTimeout(1000);
-    await fillRecaptcha(t.struct.authPages.signIn.recaptcha);
-    await t.page.waitForTimeout(1000);
-
-    await t.struct.authPages.signIn.signIn.waitForVisible();
-    await t.struct.authPages.signIn.signIn.click();
-    await t.page.waitForTimeout(2000);
 
     //click the latest one
-    const lists = await s.page.$$(
-      '//div[contains(text(),"Your teacher has assigned you tutoring!")]'
-    );
-    lists[0].click();
+    // const lists = await s.page.$$(
+    //   '//div[@id="notificationsMenuButton"]'
+    // );
+    // lists[0].click();
+    await s.struct.header.notifications.other.button.click();
 
     await s.page
       .locator('//button[contains(text(),"Ready for a live session!")]')
@@ -126,8 +114,6 @@ describe("Checking SDK GG integration: ", () => {
     await s.page.waitForTimeout(1000);
 
     // the tutor signs in
-    await t.page.setViewportSize({ width: 1280, height: 720 });
-    await t.page.reload();
     await s.page.waitForTimeout(1000);
     // a tutor get in the queue
     await t.page

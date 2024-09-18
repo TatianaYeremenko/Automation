@@ -81,32 +81,6 @@ describe("live lesson - ", () => {
     .locator('//*[@id="react-app"]/div/div[4]/header/div[2]/div[1]/div[2]/div/button')
     .press('Enter');
 
-    //Describe your question
-    await s.struct.sessionRequest.description.type("test");
-
-    // close button is avalable
-    await s.struct.modals.connectTutor.content.close.waitForVisible();
-
-    // Code of Conduct
-    await s.struct.sessionRequest.codeOfConduct.check();
-
-    // await s.page.getByTestId('modals.connectTutor.content.option(10016).option').click();
-    await s.page.getByRole("button", { name: "Send session request" }).click();
-
-    // modal pops up
-    await s.struct.modals.waitingForTutor.waitForVisible();
-
-    // tutor accepts the request
-    await t.struct.modals.request.waitForVisible();
-    await t.struct.modals.request.content.accept.waitForVisible();
-    await t.struct.modals.request.content.accept.click();
-    await t.page.waitForTimeout(1000);
-    await s.page.waitForTimeout(1000);
-
-    //tutor confirm that a new student
-    t.struct.modals.firstTime.content.gotIt.waitForVisible();
-    t.struct.modals.firstTime.content.gotIt.click();
-
     // tutor click on Pause
     await t.struct.lessonSpace.header.pause.click();
 

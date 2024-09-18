@@ -109,7 +109,7 @@ describe("live lesson - ", () => {
     // select stoke
     await s.struct.lessonSpace.whiteboard.stroke.selectBase.click();
     // Click on each
-    const selectStokeItems = ["1", "2", "4", "8", "16", "SD", "SP"] as const;
+    const selectStokeItems = ["1 px", "2 px", "4 px", "8 px", "16 px", "Plain Stroke", "Dotted Stroke"] as const;
     for (const item of selectStokeItems) {
       await s.struct.lessonSpace.whiteboard.stroke.item(item).click();
       await s.struct.lessonSpace.whiteboard.stroke.selectBase.click();
@@ -118,7 +118,7 @@ describe("live lesson - ", () => {
     await s.struct.lessonSpace.whiteboard.strokeColor.selectBase.click();
 
     // Click on each
-    const selectStokeColors = ["#1B2B34", "#CED2D9", "#AB7967"] as const;
+    const selectStokeColors = ["transparent", "#262626", "#545454"] as const;
     for (const item of selectStokeColors) {
       await s.struct.lessonSpace.whiteboard.strokeColor.item(item).click();
       await s.struct.lessonSpace.whiteboard.strokeColor.selectBase.click();

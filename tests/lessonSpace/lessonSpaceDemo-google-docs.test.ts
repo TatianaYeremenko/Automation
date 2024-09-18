@@ -7,7 +7,7 @@ describe('Visitor/Regular/Umbrella Demo Lesson Space - ', () => {
             type: "studentWithUmbrella"
         }
     ])(
-        '$type - google docs are available and opening',
+        '$type - google docs are available but disabled in DEMO',
         async ({
             type
         }) => {
