@@ -5,6 +5,7 @@ import { rename } from "fs/promises";
 import { parse } from "superjson";
 import { keys, replace, unescape } from "lodash";
 import { z } from "zod";
+import faker, { random } from "faker";
 
 import { domain, verbose, product } from "./shared";
 
@@ -233,6 +234,165 @@ global.createQaUser = function createQaUser(kind: keyof typeof qaUserButtons) {
   });
 };
 
+global.createPublicRequest = function createPublicRequest(kind: keyof typeof qaUserButtons) {
+  return withOra(`Submit Public Request `, async (log) => {
+    const mode = qaUserButtons[kind];
+    if (!mode) {
+      throw new Error(`Unknown user kind: "${kind}"`);
+    }
+    const page = await launchBrowser(`${BASE_URL}/api/v1/qa/`);
+    await page.click(`[name='${mode}']`, { timeout: 10000 });
+    await page.waitForFunction("window.tutormeLoaded", { timeout: 10000 });
+    await page.setViewportSize({ width: 1600, height: 1200 });
+
+    // click on Request A Tutor
+    await page.getByTestId('homepage.requestATutor').isVisible();
+    await page.getByTestId('homepage.requestATutor').click();
+    await page.waitForTimeout(500);
+        
+    // select subject
+    await page.getByText("Kindergarten").click();
+    await page.getByTestId('sessionRequest.nextArrow').dblclick();
+    await page.waitForTimeout(500);
+
+    await page.locator('label').filter({ hasText: 'Math' }).click();
+    await page.getByTestId('sessionRequest.nextArrow').dblclick();
+    await page.waitForTimeout(500);
+
+    await page.locator("label").filter({ hasText: "Basic Math" }).click();
+    await page.getByTestId('sessionRequest.nextArrow').click();
+    await page.waitForTimeout(500);
+
+    // fill out the form
+    const text = `Automation - Lesson submitted from  ${faker.lorem.sentence(10).toString()}`;
+    await page.getByTestId('sessionRequest.description').type(text);
+    await page.getByTestId('sessionRequest.nextArrow').dblclick();
+    await page.waitForTimeout(1000);
+
+    // select the options
+    await page
+      .locator("label")
+      .filter({ hasText: "I'm starting to get it" })
+      .locator("svg")
+      .check();
+      await page.waitForTimeout(1000);
+
+    await page.locator("label").filter({ hasText: "Audio only" }).check();
+    await page.getByTestId('sessionRequest.nextArrow').dblclick();
+    await page.waitForTimeout(1000);
+
+    await page.getByTestId('sessionRequest.codeOfConduct').locator('svg').click();
+    await page.waitForTimeout(1000);
+
+    await (await page.waitForSelector('//button[@data-testid="sessionRequest.requestTutor"]')).click();
+    await page.waitForTimeout(5000);
+
+    const user = await getUserData(page);
+
+    if (!user) {
+      throw new Error("Can't get user data");
+    }
+    log(`Public Request is submitted`)
+    return {
+      page,
+      user,
+      struct: buildApi(page, source),
+    };  
+  });
+};
+
+
+global.createDirectRequest = function createDirectRequest(kind: keyof typeof qaUserButtons) {
+  return withOra(`Submit Direct Request `, async (log) => {
+    const mode = qaUserButtons[kind];
+    if (!mode) {
+      throw new Error(`Unknown user kind: "${kind}"`);
+    }
+    const page = await launchBrowser(`${BASE_URL}/api/v1/qa/`);
+    await page.click(`[name='${mode}']`, { timeout: 10000 });
+    await page.waitForFunction("window.tutormeLoaded", { timeout: 10000 });
+    await page.setViewportSize({ width: 1600, height: 1200 });
+
+    // click on Request A Tutor
+    await page.getByTestId('header.browseTutors').isVisible();
+    await page.getByTestId('header.browseTutors').click();
+    await page.waitForTimeout(5000);
+
+    await page.getByTestId('tutors.filter.onlineNow').locator('svg').click();
+        
+    // select tutor
+    ((await page.$$('//button[contains(text(),"View profile")]')))[0].click();
+
+
+    await page.waitForTimeout(500);
+
+    // select subject
+    await page.getByTestId('modals.connectTutor.content.subjectSelect').click();
+    await page.getByTestId('modals.connectTutor.content.option(10003).option').click();
+    await page.waitForTimeout(500);
+
+    // select grade
+    await page.getByRole('combobox', { name: 'Select your grade level*' }).click();
+    await page.getByRole('option', { name: 'Kindergarten' }).click();
+    await page.waitForTimeout(500);
+
+    const text = `Automation - Lesson submitted from  ${faker.lorem.sentence(10).toString()}`;
+    await page.getByTestId('sessionRequest.description').click();
+    await page.getByTestId('sessionRequest.description').type(text);
+
+    // select codeOfConduct
+    await page.getByTestId('sessionRequest.codeOfConduct').locator('svg').click();
+    await page.waitForTimeout(5000);
+
+    const user = await getUserData(page);
+
+    if (!user) {
+      throw new Error("Can't get user data");
+    }
+    log(`Direct Request is submitted`)
+    return {
+      page,
+      user,
+      struct: buildApi(page, source),
+    };  
+  });
+};
+
+
+global.createTutorInQueue = function createTutorInQueue() {
+    return withOra(`create tutor gets in queue`, async (log) => {
+      const mode = 'approved';
+      if (!mode) {
+        throw new Error(`Unknown user kind`);
+      }
+      const page = await launchBrowser(`${BASE_URL}/api/v1/qa/`);
+      await page.click(`[name='${mode}']`, { timeout: 10000 });
+      await page.waitForFunction("window.tutormeLoaded", { timeout: 10000 });
+
+    // tutor switch on
+    await page
+      .locator('//button[@aria-label="Enter the tutoring queue? off"]')
+      .isVisible();
+    await page
+      .locator('//button[@aria-label="Enter the tutoring queue? off"]')
+      .click();
+    await page.waitForTimeout(3000);    
+        
+    const user = await getUserData(page);
+    if (!user) {
+      throw new Error("Can't get user data");
+    }
+    log(`tutor created`);
+    return {
+      page,
+      user,
+      struct: buildApi(page, source),
+    };
+  });
+};
+
+
+
 global.createQaTutor = function createQaTutor() {
   return withOra(`create tutor`, async (log) => {
     const mode = 'approved';
@@ -242,12 +402,8 @@ global.createQaTutor = function createQaTutor() {
     const page = await launchBrowser(`${BASE_URL}/api/v1/qa/`);
     await page.click(`[name='${mode}']`, { timeout: 10000 });
     await page.waitForFunction("window.tutormeLoaded", { timeout: 10000 });
-        
-    // await (await page.waitForSelector('//button[contains(text(),"Review your subjects")]')).click();
-    // await page.waitForTimeout(100);
-    // await page.getByRole("button", { name: "Save selections" }).click();
-    // await page.waitForTimeout(100);
-    // await (await page.waitForSelector('//a[contains(text(),"Go to your account")]')).click();
+    await page.reload();
+    await page.waitForTimeout(3000);
 
     const user = await getUserData(page);
     if (!user) {

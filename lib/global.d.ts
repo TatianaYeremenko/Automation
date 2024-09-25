@@ -19,6 +19,25 @@ declare function createQaUser(kind: keyof typeof qaUserButtons): Promise<{
   struct: StructApi;
 }>;
 
+declare function createPublicRequest(kind: keyof typeof qaUserButtons): Promise<{
+  page: Page;
+  user: UserData;
+  struct: StructApi;
+}>;
+
+declare function createDirectRequest(kind: keyof typeof qaUserButtons): Promise<{
+  page: Page;
+  user: UserData;
+  struct: StructApi;
+}>;
+
+declare function createTutorInQueue(): Promise<{
+  page: Page;
+  user: UserData;
+  struct: StructApi;
+}>;
+
+
 declare function createQaTutor(): Promise<{
   page: Page;
   user: UserData;

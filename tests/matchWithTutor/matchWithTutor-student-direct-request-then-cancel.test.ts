@@ -5,27 +5,27 @@ import faker, {
     it("student contacts a tutor directly, then cancel the request", async () => {
   
         //create tutor
-        const t = await createQaUser('tutor');
+        const t = await createQaTutor();
 
         // get tutor name and id
-        let tutorId  = t.user.id.toString();
-        let name = t.user.shortName.toString();
+        let tutorId  = t.user.id;
+        // let name = t.user.shortName.toString();
 
         //create student
         const s = await createQaUser('studentWithUmbrella');
   
         // go to browse tutors 
-        await s.struct.footer.browseTutors.waitForVisible();
-        await s.struct.footer.browseTutors.click();
-        await s.page.keyboard.down('PageDown');
-
+        await s.struct.header.browseTutors.waitForVisible();
+        await s.struct.header.browseTutors.click();
+        await s.page.waitForTimeout(500);
         // find available tutor
         await s.struct.tutors.filter.onlineNow.waitForVisible();
         await s.struct.tutors.filter.onlineNow.check();
+        await s.page.waitForTimeout(500);
 
-        // click on the tutor  
-        await s.struct.tutors.tutor(tutorId).viewProfile.waitForVisible();      
-        await s.struct.tutors.tutor(tutorId).viewProfile.click();
+        // click on the tutor      
+        await s.struct.tutors.tutor(tutorId).card.click();
+        await s.page.waitForTimeout(500);
 
         //click on Start Lesson
         await s.struct.tutorProfile.requestLesson.waitForVisible();
@@ -36,11 +36,20 @@ import faker, {
         await s.struct.modals.connectTutor.content.subjectSelect.click();
         await s.struct.modals.connectTutor.content.subjectSelect.press('ArrowDown');
         await s.struct.modals.connectTutor.content.subjectSelect.press('Enter');
-        await s.struct.modals.connectTutor.content.sendRequest.click();
+
+        //select grade
+        await (await s.page.waitForSelector('id="react-aria3946528176-7"')).click();
+        await s.struct.modals.connectTutor.content.subjectSelect.press('ArrowDown');
+        await s.struct.modals.connectTutor.content.subjectSelect.press('Enter');
+
+        await s.struct.sessionRequest.codeOfConduct.click();
 
         //modal pops up 
         await s.struct.modals.waitingForTutor.waitForVisible();
         await s.page.waitForTimeout(1000);
+
+        // tutor see the rquest
+        await t.struct.modals.overlay.waitForVisible();
 
         //modal pops up and student cancels lesson
         s.struct.modals.waitingForTutor.content.cancel.waitForVisible();
@@ -48,10 +57,6 @@ import faker, {
 
         await s.page.waitForTimeout(1000);
         await t.page.waitForTimeout(1000);
-
-        //tutor see that the request was canceled
-        t.struct.modals.waitingRoomStudentCanceled.waitForVisible();
-        t.struct.modals.waitingRoomStudentCanceled.content.okay.click();
 
         // student signs out
         await s.struct.header.userTools.username.click();

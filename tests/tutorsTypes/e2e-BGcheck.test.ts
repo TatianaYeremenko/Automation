@@ -74,6 +74,9 @@ describe("E2E BGcheck: ", () => {
       await page.waitForSelector('//a[contains(text(),"Terms of Service")]')
     ).waitForElementState("visible");
 
+    await page.waitForTimeout(500);
+
+
     //tutor signs out
     await struct.userMenu.signOut.click();
   });
@@ -149,7 +152,12 @@ describe("E2E BGcheck: ", () => {
 
     await t.struct.modals.firstTime.content.gotIt.waitForVisible();
     await t.struct.modals.firstTime.content.gotIt.click();
-    await t.page.waitForTimeout(10000);
+
+    await t.page
+    .locator('//*[@id="react-app"]/div/div[4]/header/div[2]/div[1]/div[2]/div/button')
+    .press('Enter');
+
+    await s.page.waitForTimeout(10000);
 
     // student ends the lesson
     await s.struct.lessonSpace.header.end.waitForVisible();
