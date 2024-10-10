@@ -28,17 +28,22 @@ import faker, {
       //select gender
       await struct.account.tutorProfile.gender.select.click();
       await struct.account.tutorProfile.gender.option(1).option.click();
+      // console.log(await struct.account.tutorProfile.about.text());
 
       //type about
-      // let  about = faker.lorem.sentence(3);
+      const  about = faker.lorem.sentence(3);
+      // console.log(about);
       await struct.account.tutorProfile.about.waitForVisible();
       await struct.account.tutorProfile.about.clear();
-      await struct.account.tutorProfile.about.type('Quisquam quis et.');
-
+      await struct.account.tutorProfile.about.type(about);
+      // console.log(await struct.account.tutorProfile.teaching.text());
+      
       //type teaching expireance
+      const  techer_exp = faker.lorem.sentence(1);
+      // console.log(techer_exp);
       await struct.account.tutorProfile.teaching.waitForVisible();
       await struct.account.tutorProfile.teaching.clear();
-      await struct.account.tutorProfile.teaching.type('Eum totam maxime.');
+      await struct.account.tutorProfile.teaching.type(techer_exp);
 
       //remove work experience
       await struct.account.tutorProfile.addWork.waitForVisible();
@@ -92,8 +97,8 @@ import faker, {
       await struct.account.tutorProfile.education(0).end.select.press('Enter');
 
       await (await page.waitForSelector('//button[contains(text(),"Submit")]')).click();
-      await struct.toast.success.waitForVisible();
       await page.waitForTimeout(2000);
+      await struct.toast.success.waitForVisible();
 
 
       // click on Edit Profile
@@ -102,10 +107,12 @@ import faker, {
       await page.waitForTimeout(2000);
       await page.reload();
 
-      // checked edited data
-      expect(await struct.account.tutorProfile.about.text()).toContain('Q');
-      expect(await struct.account.tutorProfile.teaching.text()).toContain('E');
+      console.log((await struct.account.tutorProfile.about.text()).toString());
+      console.log((await struct.account.tutorProfile.teaching.text()).toString());
 
+      // checked edited data
+      expect(await struct.account.tutorProfile.about.text()).toBe(about.toString());
+      expect(await struct.account.tutorProfile.teaching.text()).toBe(techer_exp.toString());
 
       //tutor signs out
       await struct.tutorDashboard.header.userTools.username.click();
