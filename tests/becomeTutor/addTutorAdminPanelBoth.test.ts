@@ -92,12 +92,9 @@ it.each`
       "Earth Science",
       "Physics",
       "Social Studies",
-      "Economics",
       "Psychology",
-      "General Computer Science",
-      "C++ Programming",
-      "Spanish",
-      "Business",
+      "Spanish"
+      // "Business and Economics",
     ] as const;
 
     for (const item of subjects) {

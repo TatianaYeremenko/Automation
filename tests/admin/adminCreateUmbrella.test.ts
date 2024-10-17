@@ -1,5 +1,16 @@
 import faker from "faker";
-it("New Umbrella Account is created and edited successfully", async () => {
+describe('Ensure that new Umbrella Account is created and edited successfully: ', () => {
+
+    it.each `
+    type
+    ${'k-12'},
+    ${'higher ed'},
+    ${'corporate'}
+    `
+    ('$type type', async ({
+type
+    }) => {
+
         //create Admin
         const a = await createAdmin(); 
         await a.page.waitForTimeout(1000);
@@ -16,13 +27,17 @@ it("New Umbrella Account is created and edited successfully", async () => {
         let umbrellaName = faker.company.companyName();
         await (await a.page.waitForSelector('//input[@id="id_name"]')).fill(umbrellaName.replace(/[^A-Z0-9]/ig,''))
         let umbrellaId = umbrellaName.replace(/[^A-Z0-9]/ig, "");
-        console.log(umbrellaId);
+        // console.log(umbrellaId);
         await a.page.waitForTimeout(200);
 
         // enter NameCompany
         await (await a.page.waitForSelector('//input[@id="id_display_name"]')).fill(umbrellaName);
         await a.page.waitForTimeout(200);
         console.log(umbrellaName);
+
+        // Type of the umbrella
+        await a.page.selectOption('#id_partner_type', type);
+        await a.page.waitForTimeout(200);
 
         // enter Billing
         await a.page.selectOption('#id_billing_mode', '3');
@@ -77,3 +92,4 @@ it("New Umbrella Account is created and edited successfully", async () => {
 
         // await a.page.close();
     });
+});
